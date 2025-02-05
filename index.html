@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Labeling Task</title>
+    <script defer src="script.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .image-container { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        img { width: 200px; height: 200px; cursor: pointer; border: 3px solid transparent; transition: border 0.3s; }
+        img:hover { border: 3px solid lightgray; }
+        img.selected { border: 3px solid blue; }
+        button { margin-top: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
+        button:disabled { background-color: lightgray; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <h1>Which Image Best Matches the Prompt?</h1>
+    <p id="prompt-text">Loading prompt...</p>
+    <div class="image-container" id="image-container"></div>
+    <button id="submit-btn" disabled>Submit Selection</button>
+</body>
+</html>
