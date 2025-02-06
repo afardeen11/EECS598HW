@@ -18,14 +18,14 @@ const firebaseConfig = {
     appId: "1:653958479385:web:b28ad15803f5843260f488"
   
   };
-  
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 document.addEventListener("DOMContentLoaded", async () => {
     const BASE_URL = "images_with_prompt/";
-    
+    let surveyCode = localStorage.getItem("surveyCode"); 
+
     try {
         const response = await fetch("data.json");
         let dataset = await response.json();
@@ -42,11 +42,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         let currentIndex = 0;
         let selectedImage = null;
-        const totalPrompts = dataset.length;
+        const totalPrompts = dataset.length; 
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const assignmentId = urlParams.get("assignmentId") || "Unknown";
-        const workerId = urlParams.get("workerId") || "Unknown";
+        if (!surveyCode) {
+            surveyCode = Math.random().toString(36).substr(2, 6).toUpperCase();
+            localStorage.setItem("surveyCode", surveyCode); 
+        }
 
         function updateProgress() {
             document.getElementById("progress").innerText = `Completed: ${currentIndex} / ${totalPrompts}`;
@@ -54,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         function loadPrompt(index) {
             if (index >= totalPrompts) {
-                generateSurveyCode();  
+                displaySurveyCode();
                 return;
             }
 
@@ -62,6 +63,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("prompt-text").innerText = data.prompt;
             const container = document.getElementById("image-container");
             container.innerHTML = ""; 
+
             data.images.forEach(imgName => {
                 const img = document.createElement("img");
                 img.src = `${BASE_URL}${data.prompt}/${imgName}`;
@@ -86,31 +88,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         document.getElementById("submit-btn").addEventListener("click", async () => {
             if (!selectedImage) return;
-        
+
             console.log(`Selected Image: ${selectedImage} for Prompt: "${dataset[currentIndex].prompt}"`);
 
-            push(ref(db, "mturk-results"), {
-                assignmentId: assignmentId,
-                workerId: workerId,
+            const surveyRef = ref(db, `mturk-results/${surveyCode}/responses`);
+            push(surveyRef, {
                 prompt: dataset[currentIndex].prompt,
                 selectedImage: selectedImage,
                 timestamp: new Date().toISOString()
+            }).then(() => {
+                console.log("✅ Selection stored in Firebase.");
+            }).catch(error => {
+                console.error("❌ Error saving selection:", error);
             });
 
             currentIndex++;  
             loadPrompt(currentIndex);
         });
 
-        function generateSurveyCode() {
-            const surveyCode = Math.random().toString(36).substr(2, 6).toUpperCase();
-
-            push(ref(db, "mturk-results"), {
-                assignmentId: assignmentId,
-                workerId: workerId,
-                surveyCode: surveyCode,
-                completedAt: new Date().toISOString()
-            });
-
+        function displaySurveyCode() {
             const surveyCodeElement = document.createElement("p");
             surveyCodeElement.innerHTML = `Your Survey Code: <strong>${surveyCode}</strong>`;
             surveyCodeElement.style.fontSize = "20px";
@@ -118,7 +114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.body.appendChild(surveyCodeElement);
 
             document.getElementById("submit-btn").style.display = "none";
-            localStorage.setItem("surveyCode", surveyCode);
         }
 
         loadPrompt(currentIndex);
