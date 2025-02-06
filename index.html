@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Labeling Task</title>
-    <script defer src="script.js"></script>
+    <script type="module" defer src="script.js"></script>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
         .image-container { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
@@ -13,11 +13,13 @@
         img.selected { border: 3px solid blue; }
         button { margin-top: 20px; padding: 10px 20px; font-size: 16px; cursor: pointer; }
         button:disabled { background-color: lightgray; cursor: not-allowed; }
+        #progress { font-size: 18px; margin-top: 10px; }
     </style>
 </head>
 <body>
     <h1>Which Image Best Matches the Prompt?</h1>
     <p id="prompt-text">Loading prompt...</p>
+    <p id="progress">Completed: 0 / 40</p> 
     <div class="image-container" id="image-container"></div>
     <button id="submit-btn" disabled>Submit Selection</button>
 </body>
