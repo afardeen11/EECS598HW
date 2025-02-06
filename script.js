@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         shuffleArray(dataset);
-        dataset = dataset.slice(0, 50); 
+        dataset = dataset.slice(0, 10); 
 
         let currentIndex = 0;
         let selectedImage = null;
