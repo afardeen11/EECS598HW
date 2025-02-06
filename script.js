@@ -41,14 +41,44 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         document.getElementById("submit-btn").addEventListener("click", () => {
             if (!selectedImage) return;
-
+        
             console.log(`Selected Image: ${selectedImage} for Prompt: "${dataset[currentIndex].prompt}"`);
-            currentIndex++;
-            loadPrompt(currentIndex);
+        
+            // Get MTurk Assignment & HIT ID (needed for submission)
+            const urlParams = new URLSearchParams(window.location.search);
+            const assignmentId = urlParams.get("assignmentId");
+        
+            if (assignmentId === "ASSIGNMENT_ID_NOT_AVAILABLE") {
+                alert("This is a preview. Accept the HIT to continue.");
+                return;
+            }
+        
+            // Send data back to MTurk
+            const form = document.createElement("form");
+            form.method = "POST";
+            form.action = "https://www.mturk.com/mturk/externalSubmit";
+        
+            const assignmentInput = document.createElement("input");
+            assignmentInput.type = "hidden";
+            assignmentInput.name = "assignmentId";
+            assignmentInput.value = assignmentId;
+            form.appendChild(assignmentInput);
+        
+            const selectionInput = document.createElement("input");
+            selectionInput.type = "hidden";
+            selectionInput.name = "selectedImage";
+            selectionInput.value = selectedImage;
+            form.appendChild(selectionInput);
+        
+            document.body.appendChild(form);
+            form.submit();
         });
+        
 
         loadPrompt(currentIndex);
     } catch (error) {
         console.error("Error loading data.json:", error);
     }
 });
+
+
