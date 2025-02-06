@@ -44,34 +44,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         
             console.log(`Selected Image: ${selectedImage} for Prompt: "${dataset[currentIndex].prompt}"`);
         
-            // Get MTurk Assignment & HIT ID (needed for submission)
-            const urlParams = new URLSearchParams(window.location.search);
-            const assignmentId = urlParams.get("assignmentId");
+            // Generate a random survey code (e.g., 6-digit alphanumeric)
+            const surveyCode = Math.random().toString(36).substr(2, 6).toUpperCase();
         
-            if (assignmentId === "ASSIGNMENT_ID_NOT_AVAILABLE") {
-                alert("This is a preview. Accept the HIT to continue.");
-                return;
-            }
+            // Display the survey code to the user
+            const surveyCodeElement = document.createElement("p");
+            surveyCodeElement.innerHTML = `Your Survey Code: <strong>${surveyCode}</strong>`;
+            surveyCodeElement.style.fontSize = "20px";
+            surveyCodeElement.style.color = "green";
+            document.body.appendChild(surveyCodeElement);
         
-            // Send data back to MTurk
-            const form = document.createElement("form");
-            form.method = "POST";
-            form.action = "https://www.mturk.com/mturk/externalSubmit";
+            // Hide the submit button to prevent multiple submissions
+            document.getElementById("submit-btn").style.display = "none";
         
-            const assignmentInput = document.createElement("input");
-            assignmentInput.type = "hidden";
-            assignmentInput.name = "assignmentId";
-            assignmentInput.value = assignmentId;
-            form.appendChild(assignmentInput);
-        
-            const selectionInput = document.createElement("input");
-            selectionInput.type = "hidden";
-            selectionInput.name = "selectedImage";
-            selectionInput.value = selectedImage;
-            form.appendChild(selectionInput);
-        
-            document.body.appendChild(form);
-            form.submit();
+            // Store the survey code in localStorage (optional for debugging)
+            localStorage.setItem("surveyCode", surveyCode);
         });
         
 
