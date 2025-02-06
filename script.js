@@ -2,14 +2,23 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 const firebaseConfig = {
-    apiKey: "YOUR_FIREBASE_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
+
+    apiKey: "AIzaSyB26oHzRvNNdKqAQ8z8RJ73HUlH2bmpsjs",
+  
+    authDomain: "hw-ba8d2.firebaseapp.com",
+  
+    databaseURL: "https://hw-ba8d2-default-rtdb.firebaseio.com",
+  
+    projectId: "hw-ba8d2",
+  
+    storageBucket: "hw-ba8d2.firebasestorage.app",
+  
+    messagingSenderId: "653958479385",
+  
+    appId: "1:653958479385:web:b28ad15803f5843260f488"
+  
+  };
+  
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
