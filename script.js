@@ -1,23 +1,16 @@
+// JavaScript part (script.js):
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 const firebaseConfig = {
-
     apiKey: "AIzaSyB26oHzRvNNdKqAQ8z8RJ73HUlH2bmpsjs",
-  
     authDomain: "hw-ba8d2.firebaseapp.com",
-  
     databaseURL: "https://hw-ba8d2-default-rtdb.firebaseio.com",
-  
     projectId: "hw-ba8d2",
-  
     storageBucket: "hw-ba8d2.firebasestorage.app",
-  
     messagingSenderId: "653958479385",
-  
     appId: "1:653958479385:web:b28ad15803f5843260f488"
-  
-  };
+};
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -78,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         function selectImage(img) {
-            document.querySelectorAll(".image-container img").forEach(image => {
+            document.querySelectorAll("#image-container img").forEach(image => {
                 image.classList.remove("selected");
             });
             img.classList.add("selected");
@@ -88,8 +81,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         document.getElementById("submit-btn").addEventListener("click", async () => {
             if (!selectedImage) return;
-
-            console.log(`Selected Image: ${selectedImage} for Prompt: "${dataset[currentIndex].prompt}"`);
 
             const surveyRef = ref(db, `mturk-results/${surveyCode}/responses`);
             push(surveyRef, {
@@ -107,13 +98,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         function displaySurveyCode() {
-            const surveyCodeElement = document.createElement("p");
-            surveyCodeElement.innerHTML = `Your Survey Code: <strong>${surveyCode}</strong>`;
-            surveyCodeElement.style.fontSize = "20px";
-            surveyCodeElement.style.color = "green";
+            const surveyCodeElement = document.createElement("div");
+            surveyCodeElement.innerHTML = `
+                <h2>Thank you for completing the task!</h2>
+                <p style="font-size: 20px; margin: 20px 0;">
+                    Your Survey Code: <strong>${surveyCode}</strong>
+                </p>
+                <p>Please copy this code and submit it to complete your task.</p>
+            `;
+            surveyCodeElement.style.marginTop = "30px";
             document.body.appendChild(surveyCodeElement);
 
+            // Hide the main task interface
+            document.querySelector(".prompt-section").style.display = "none";
+            document.getElementById("image-container").style.display = "none";
             document.getElementById("submit-btn").style.display = "none";
+            document.getElementById("progress").style.display = "none";
         }
 
         loadPrompt(currentIndex);
